@@ -11,6 +11,7 @@ public class Estudiante {
     private int edad;
     private List<Curso> cursosInscritos;
     private Map<Curso, Double> calificaciones;
+    private List<Estudiante> estudiantes;
 
     public Estudiante(String id, String nombre, int edad) {
         this.id = id;
@@ -18,9 +19,60 @@ public class Estudiante {
         this.edad = edad;
         this.cursosInscritos = new ArrayList<>();
         this.calificaciones = new HashMap<>();
+        this.estudiantes = new ArrayList<>();
+    }
+
+    public void inscribirseEnCurso(Curso curso) {
+        if (!cursosInscritos.contains(curso)) {
+            cursosInscritos.add(curso);
+            System.out.println(getNombre() + " se ha inscrito en el curso: " + curso.getNombre());
+        } else {
+            System.out.println(getNombre() + " ya esta inscrito en ese curso.");
+        }
+    }
+
+    public void cancelarInscripcionCurso(Curso curso) {
+        if (cursosInscritos.contains(curso)) {
+            cursosInscritos.remove(curso);
+            System.out.println(getNombre() + " se ha dado debaja del curso: " + curso.getNombre());
+        } else {
+            System.out.println(getNombre() + " no estaba inscrito en ese curso.");
+        }
+    }
+
+    public void asignarCalificacion(Curso curso, Double calificacion) {
+        if (curso == null) {
+            System.out.println("El curso no puede ser nulo.");
+            return;
+        }
+        if (calificacion < 0.0 || calificacion > 100) {
+            System.out.println("La calificacion debe de estar entre (0 y 100).");
+            return;
+        }
+        calificaciones.put(curso, calificacion);
+        System.out.println("Calificacion asignada para el curso: " + curso.getNombre() + ": " + calificacion);
+    }
+
+    public void mostrarCalificacion() {
+        for (Map.Entry<Curso, Double> entry : calificaciones.entrySet()) {
+            System.out.println("Curso: " + entry.getKey().getNombre() + ", Nota: " + entry.getValue());
+        }
+    }
+
+    public void registrarEstudiante(Estudiante estudiante) {
+        if (!estudiantes.contains(estudiante)) {
+            estudiantes.add(estudiante);
+            System.out
+                    .println("El estudiante: " + getNombre() +
+                            " con ID: " + getId() +
+                            " se a inscrito exitosamente.");
+        } else {
+            System.out.println(getNombre() + " ya esta inscrito en el instituto.");
+        }
     }
 
     public void mostrarInformacion() {
+        System.out.println("====== Datos del estudiante ======");
         System.out.println(
                 "ID: " + getId() +
                         "\nNombre: " + getNombre() +
@@ -56,6 +108,10 @@ public class Estudiante {
         return calificaciones;
     }
 
+    public List<Estudiante> getEstudiantes() {
+        return estudiantes;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -75,6 +131,10 @@ public class Estudiante {
 
     public void setCalificaciones(Map<Curso, Double> calificaciones) {
         this.calificaciones = calificaciones;
+    }
+
+    public void setEstudiantes(List<Estudiante> estudiantes) {
+        this.estudiantes = estudiantes;
     }
 
 }
