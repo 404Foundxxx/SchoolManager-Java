@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Estudiante {
+
+    // Atributos
     private String id;
     private String nombre;
     private int edad;
@@ -13,6 +15,7 @@ public class Estudiante {
     private Map<Curso, Double> calificaciones;
     private List<Estudiante> estudiantes;
 
+    // Metodo constructor de la clase Estudiante
     public Estudiante(String id, String nombre, int edad) {
         this.id = id;
         this.nombre = nombre;
@@ -22,6 +25,7 @@ public class Estudiante {
         this.estudiantes = new ArrayList<>();
     }
 
+    // Metodo inscribe un estudiante a un curso
     public void inscribirseEnCurso(Curso curso) {
         if (!cursosInscritos.contains(curso)) {
             cursosInscritos.add(curso);
@@ -31,6 +35,7 @@ public class Estudiante {
         }
     }
 
+    // Este método da de baja al estudiante de un curso
     public void cancelarInscripcionCurso(Curso curso) {
         if (cursosInscritos.contains(curso)) {
             cursosInscritos.remove(curso);
@@ -40,6 +45,7 @@ public class Estudiante {
         }
     }
 
+    // Asigna una calificación a un curso específico del estudiante
     public void asignarCalificacion(Curso curso, Double calificacion) {
         if (curso == null) {
             System.out.println("El curso no puede ser nulo.");
@@ -53,12 +59,17 @@ public class Estudiante {
         System.out.println("Calificacion asignada para el curso: " + curso.getNombre() + ": " + calificacion);
     }
 
+    /*
+     * Método que muestra todas las calificaciones de los cursos en los que el
+     * estudiante está inscrito
+     */
     public void mostrarCalificacion() {
         for (Map.Entry<Curso, Double> entry : calificaciones.entrySet()) {
             System.out.println("Curso: " + entry.getKey().getNombre() + ", Nota: " + entry.getValue());
         }
     }
 
+    // Registra un estudiante en la lista de estudiantes
     public void registrarEstudiante(Estudiante estudiante) {
         if (!estudiantes.contains(estudiante)) {
             estudiantes.add(estudiante);
@@ -71,6 +82,7 @@ public class Estudiante {
         }
     }
 
+    // Metodo muestra toda las informacion del estudiante
     public void mostrarInformacion() {
         System.out.println("====== Datos del estudiante ======");
         System.out.println(

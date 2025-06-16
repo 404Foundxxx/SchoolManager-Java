@@ -3,20 +3,25 @@ package model;
 import java.util.ArrayList;
 
 public class Profesor {
+
+    // Atributos
     private String id;
     private String nombre;
     private ArrayList<Curso> cursos;
 
+    // Metodo Construtro de la clase Profesor
     public Profesor(String id, String nombre) {
         this.id = id;
         this.nombre = nombre;
         this.cursos = new ArrayList<>();
     }
 
+    // Metodo asigna un curso al maestro
     public void asignarCurso(Curso curso) {
         cursos.add(curso);
     }
 
+    // Este metodo muestra la informacion del maestro
     public void mostrarInformacion() {
         System.out.println("====== Datos del maestro ======");
         System.out.println(
