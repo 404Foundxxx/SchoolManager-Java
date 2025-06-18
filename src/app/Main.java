@@ -8,8 +8,10 @@ import service.GestionEstudiantes;
 import service.GestionProfesores;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
+    int opcion;
+
+    public void main(String[] args) {
 
         // Instancias únicas de las clases de gestión
         GestionEstudiantes gestionEstudiantes = new GestionEstudiantes();
@@ -17,15 +19,13 @@ public class Main {
         GestionCursos gestionCursos = new GestionCursos();
         GestionCalificaciones gestionCalificaciones = new GestionCalificaciones();
 
-        int opcion;
         do {
             System.out.println("====== SISTEMA DE GESTION ESCOLAR ======");
             System.out.println("1. Gestión de Estudiantes");
             System.out.println("2. Gestión de Profesores");
             System.out.println("3. Gestión de Cursos");
             System.out.println("4. Gestión de Calificaciones");
-            System.out.println("5. Reportes");
-            System.out.println("6. Salir");
+            System.out.println("5. Salir");
 
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
@@ -43,8 +43,6 @@ public class Main {
                 case 4:
                     gestionCalificaciones.subMenu();
                     break;
-                case 5:
-                    break;
                 case 6:
                     System.out.println("Hasta Luego...");
                     return;
@@ -54,5 +52,4 @@ public class Main {
             }
         } while (opcion != 7);
     }
-
 }
