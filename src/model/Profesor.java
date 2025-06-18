@@ -7,34 +7,13 @@ public class Profesor {
     // Atributos
     private String id;
     private String nombre;
-    private ArrayList<Curso> cursos;
+    private ArrayList<String> materias;
 
     // Metodo Construtro de la clase Profesor
-    public Profesor(String id, String nombre) {
+    public Profesor(String id, String nombre, String materias) {
         this.id = id;
         this.nombre = nombre;
-        this.cursos = new ArrayList<>();
-    }
-
-    // Metodo asigna un curso al maestro
-    public void asignarCurso(Curso curso) {
-        cursos.add(curso);
-    }
-
-    // Este metodo muestra la informacion del maestro
-    public void mostrarInformacion() {
-        System.out.println("====== Datos del maestro ======");
-        System.out.println(
-                "ID: " + getId() +
-                        "\nNombre: " + getNombre() +
-                        "\nCursos que imparte: ");
-        if (cursos.isEmpty()) {
-            System.out.println("  Ninguan");
-        } else {
-            for (Curso curso : cursos) {
-                System.out.println("  - " + curso.getNombre());
-            }
-        }
+        this.materias.add(materias);
     }
 
     // Getters
@@ -46,8 +25,8 @@ public class Profesor {
         return nombre;
     }
 
-    public ArrayList<Curso> getMaterias() {
-        return cursos;
+    public ArrayList<String> getMaterias() {
+        return materias;
     }
 
     // Setters
@@ -59,8 +38,7 @@ public class Profesor {
         this.nombre = nombre;
     }
 
-    public void setMaterias(ArrayList<Curso> cursos) {
-        this.cursos = cursos;
+    public void setMaterias(ArrayList<String> materias) {
+        this.materias = materias;
     }
-
 }
