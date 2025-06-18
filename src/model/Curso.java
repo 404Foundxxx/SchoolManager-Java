@@ -8,7 +8,12 @@ public class Curso {
     private Profesor profesorAsignado;
     private ArrayList<Estudiante> estudiantes;
 
-    // Metodo constructor de la clase Curso
+    // Metodo constructor de la clase Curso sin parametros vacio
+    public Curso() {
+
+    }
+
+    // Metodo constructor de la clase Curso con parametros
     public Curso(String nombre, Profesor profesorAsignado) {
         this.nombre = nombre;
         this.profesorAsignado = profesorAsignado;
