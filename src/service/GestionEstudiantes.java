@@ -2,79 +2,84 @@ package service;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import model.Estudiante;
 
 public class GestionEstudiantes {
+    // Atributos de la clase
     private ArrayList<Estudiante> estudiantes;
+    private String id, nombre;
+    private int edad, opcion;
 
     public GestionEstudiantes() {
         this.estudiantes = new ArrayList<>();
     }
 
+    // Instancias
+    Scanner scanner = new Scanner(System.in);
+    // Estudiante estudiante = new Estudiante(); => Prueba
+
+    /*
+     * Metodo que resgistra a los estudiantes guardandolo en el array local
+     * "estudiantes"
+     */
+    public void agregarEstudiante() {
+        scanner.nextLine();
+        System.out.println("====== Registrar Estudiante ======\n");
+        System.out.print("ID: ");
+        id = scanner.nextLine();
+        System.out.print("Nombre: ");
+        nombre = scanner.nextLine();
+        System.out.print("Edad: ");
+        edad = scanner.nextInt();
+        Estudiante estudiante = new Estudiante(id, nombre, edad);
+        estudiantes.add(estudiante);
+    }
+
+    /*
+     * Metodo que lista todos los estudiantes de la lista estudiante de la clase
+     * GestionEstudiantes
+     */
+    public void listarEstudiantes() {
+        System.out.println("====== Estudiantes ======");
+        for (Estudiante e : estudiantes) {
+            e.mostrarInformacion();
+        }
+    }
+
+    // Metodo principal de la clase GestionEstudiantes como subMenu
     public void subMenu() {
-        Scanner scanner = new Scanner(System.in);
-        int opcion, edad;
-        // String id, nombre;
-        do {
+        System.out.println("====== Gestion de Estudiates ======");
+        System.out.println("1. Agregar Estudiates");
+        System.out.println("2. Listar Estudiates");
+        System.out.println("3. Buscar Estudiates");
+        System.out.println("4. Editar Estudiates");
+        System.out.println("5. Eliminar Estudiates");
+        System.out.println("0. Volver al menu principal");
 
-            System.out.println("====== Gestión de Estudiantes ======");
-            System.out.println("1. Agregar estudiante");
-            System.out.println("2. Listar estudiantes");
-            System.out.println("3. Buscar estudiante");
-            System.out.println("4. Editar estudiante");
-            System.out.println("5. Eliminar estudiante");
-            System.out.println("0. Volver al menú principal");
+        System.out.print("Seleccione una opcion: ");
+        opcion = scanner.nextInt();
 
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-
-            switch (opcion) {
-                case 1:
-                    scanner.nextLine();
-                    System.out.println("\n====== Agregar Estudiantes ======\n");
-                    System.out.print("Ingrese el ID del estudiante: ");
-                    String id = scanner.nextLine();
-                    System.out.print("Ingrese el nombre del estudiante: ");
-                    String nombre = scanner.nextLine();
-                    System.out.print("Ingresa la edad del estudiante: ");
-                    edad = scanner.nextInt();
-                    Estudiante estudiante = new Estudiante(id, nombre, edad);
-                    estudiantes.add(estudiante);
-                    break;
-                case 2:
-                    System.out.println("====== Estudiantes ======");
-                    for (Estudiante e : estudiantes) {
-                        System.out.println(
-                                "ID: " + e.getId() +
-                                        "\nNombre: " + e.getNombre() +
-                                        "\nEdad: " + e.getEdad() + "\n");
-                    }
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 0:
-                    System.out.println("Volviendo.....");
-                    break;
-                default:
-                    System.out.println("Error: Opcion invalida, intente de nuevo.");
-                    break;
-            }
-        } while (opcion != 0);
+        switch (opcion) {
+            case 1:
+                agregarEstudiante();
+                break;
+            case 2:
+                listarEstudiantes();
+                break;
+            case 3:
+                // Logica para buscar estudiante
+                break;
+            case 4:
+                // Logica para editar estudiante
+                break;
+            case 5:
+                // Logica para eliminar estudiante
+                break;
+            case 0:
+                System.out.println("Volviendo al menu principal...");
+                break;
+            default:
+                System.out.println("Opcion no valida, intente nuevamente.");
+        }
     }
-
-    // Getters
-    public ArrayList<Estudiante> getEstudiantes() {
-        return estudiantes;
-    }
-
-    // Setters
-    public void setEstudiantes(ArrayList<Estudiante> estudiantes) {
-        this.estudiantes = estudiantes;
-    }
-
 }
