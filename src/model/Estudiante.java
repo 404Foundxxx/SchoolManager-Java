@@ -26,7 +26,7 @@ public class Estudiante {
         System.out.println(
                 "ID: " + getId() +
                         "\nNombre: " + getNombre() +
-                        "\nEdad: " + getEdad());
+                        "\nEdad: " + getEdad() + "\n");
     }
 
     // Getters
