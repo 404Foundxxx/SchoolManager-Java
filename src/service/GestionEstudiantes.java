@@ -190,6 +190,16 @@ public class GestionEstudiantes {
 
     }
 
+    // Funcion que busca estudiante al ser llamada
+    public Estudiante buscarEstudiantePorId(String id) {
+        for (Estudiante e : estudiantes) {
+            if (e.getId().equals(id)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     // Metodo principal de la clase GestionEstudiantes como subMenu
     public void subMenu() {
         do {
