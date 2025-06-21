@@ -1,19 +1,21 @@
 package model;
 
-import java.util.ArrayList;
-
 public class Profesor {
 
     // Atributos
     private String id;
     private String nombre;
-    private ArrayList<String> materias;
 
     // Metodo Construtro de la clase Profesor
-    public Profesor(String id, String nombre, String materias) {
+    public Profesor(String id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.materias.add(materias);
+    }
+
+    public void mostrarInformacion() {
+        System.out.println(
+                "ID: " + getId() +
+                        "\nNombre: " + getNombre() + "\n");
     }
 
     // Getters
@@ -25,10 +27,6 @@ public class Profesor {
         return nombre;
     }
 
-    public ArrayList<String> getMaterias() {
-        return materias;
-    }
-
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -36,9 +34,5 @@ public class Profesor {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public void setMaterias(ArrayList<String> materias) {
-        this.materias = materias;
     }
 }
