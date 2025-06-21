@@ -3,7 +3,7 @@ package app;
 import java.util.Scanner;
 
 import service.GestionCalificaciones;
-import service.GestionCursos;
+import service.GestionMaterias;
 import service.GestionEstudiantes;
 import service.GestionProfesores;
 
@@ -16,14 +16,14 @@ public class Main {
         // Instancias únicas de las clases de gestión
         GestionEstudiantes gestionEstudiantes = new GestionEstudiantes();
         GestionProfesores gestionProfesores = new GestionProfesores();
-        GestionCursos gestionCursos = new GestionCursos();
+        GestionMaterias gestionMaterias = new GestionMaterias();
         GestionCalificaciones gestionCalificaciones = new GestionCalificaciones();
 
         do {
             System.out.println("====== SISTEMA DE GESTION ESCOLAR ======");
             System.out.println("1. Gestión de Estudiantes");
             System.out.println("2. Gestión de Profesores");
-            System.out.println("3. Gestión de Cursos");
+            System.out.println("3. Gestión de Materias");
             System.out.println("4. Gestión de Calificaciones");
             System.out.println("5. Salir");
 
@@ -38,7 +38,7 @@ public class Main {
                     gestionProfesores.subMenu();
                     break;
                 case 3:
-                    gestionCursos.subMenu();
+                    gestionMaterias.subMenu();
                     break;
                 case 4:
                     gestionCalificaciones.subMenu();
