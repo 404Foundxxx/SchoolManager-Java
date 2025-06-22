@@ -174,7 +174,7 @@ public class GestionEstudiantes {
                 encontrado = true;
                 System.out.println("Seguro que desea eliminar? [S/N]: ");
                 char deccicion = scanner.next().charAt(0);
-                if (deccicion != 'S') {
+                if (deccicion != 'S' || deccicion != 's') {
                     System.out.println("Volviendo atras...");
                     break;
                 } else {
