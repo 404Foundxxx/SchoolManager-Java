@@ -1,62 +1,79 @@
+// src/util/Validador.java
 package util;
 
+import model.Estudiante;
+import model.Profesor;
+import model.Curso;
+
+import java.util.ArrayList;
+
 public class Validador {
-    // Valida si un ID es numérico
-    public static boolean validarId(String id) {
-        return id != null && id.matches("\\d+");
-    }
 
-    // Valida si un nombre no está vacío
-    public static boolean validarNombre(String nombre) {
-        return nombre != null && !nombre.trim().isEmpty();
-    }
-
-    // Valida si una calificación está en el rango de 0 a 100
-    public static boolean validarCalificacion(double calificacion) {
-        return calificacion >= 0 && calificacion <= 100;
-    }
-    // Valida si un curso tiene un nombre no vacío
-    public static boolean validarCurso(String curso) {
-        return curso != null && !curso.trim().isEmpty();
-    }
-    // Valida si un estudiante tiene una edad válida (mayor o igual a 18)
-    public static boolean validarEdad(int edad) {
-        return edad >= 18;
-    }
-    // Valida si un curso tiene un profesor asignado
-    public static boolean validarProfesorAsignado(String profesor) {
-        return profesor != null && !profesor.trim().isEmpty();
-    }
-    // Valida si un estudiante tiene un ID único
-    public static boolean validarIdUnico(String id, String[] idsExistentes) {
-        if (id == null || id.trim().isEmpty()) {
+    public boolean esNumeroValido(String input) {
+        if (input == null || input.trim().isEmpty()) {
             return false;
         }
-        for (String idExistente : idsExistentes) {
-            if (id.equals(idExistente)) {
-                return false; // ID ya existe
-            }
-        }
-        return true; // ID es único
-    }
-    // Valida si un curso tiene un ID único
-    public static boolean validarCursoUnico(String curso, String[] cursosExistentes) {
-        if (curso == null || curso.trim().isEmpty()) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
             return false;
         }
-        for (String cursoExistente : cursosExistentes) {
-            if (curso.equals(cursoExistente)) {
-                return false; // Curso ya existe
+    }
+
+    // Sobrecarga para números decimales
+    public boolean esDecimalValido(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public <T> boolean esIdUnico(String id, ArrayList<T> lista) {
+        if (lista == null || lista.isEmpty()) {
+            return true;
+        }
+        for (T item : lista) {
+            if (item instanceof Estudiante) {
+                if (((Estudiante) item).getId().equals(id)) {
+                    return false;
+                }
+            } else if (item instanceof Profesor) {
+                if (((Profesor) item).getId().equals(id)) {
+                    return false;
+                }
+            }
+            // Agrega más tipos si es necesario (ej. para Curso si tuvieran ID)
+        }
+        return true;
+    }
+
+    public boolean esNotaValida(String input) {
+        if (!esDecimalValido(input)) {
+            return false;
+        }
+        double nota = Double.parseDouble(input);
+        return nota >= 0 && nota <= 100;
+    }
+
+    public boolean entradaNoVacia(String input) {
+        return input != null && !input.trim().isEmpty();
+    }
+
+    public boolean esNombreCursoUnico(String nombre, ArrayList<Curso> cursos) {
+        if (cursos == null || cursos.isEmpty()) {
+            return true;
+        }
+        for (Curso curso : cursos) {
+            if (curso.getNombre().equalsIgnoreCase(nombre)) {
+                return false;
             }
         }
-        return true; // Curso es único
+        return true;
     }
-    // Valida si un estudiante tiene un ID numérico y único
-    public static boolean validarEstudiante(String id, String nombre, int edad, String[] idsExistentes) {
-        return validarId(id) && validarNombre(nombre) && validarEdad(edad) && validarIdUnico(id, idsExistentes);
-    }
-    // Valida si un curso tiene un nombre no vacío y único
-    public static boolean validarCurso(String curso, String[] cursosExistentes) {
-        return validarCurso(curso) && validarCursoUnico(curso, cursosExistentes);
-    }    
 }
