@@ -1,205 +1,134 @@
+// src/service/GestionProfesores.java
 package service;
 
+import model.Profesor;
+import model.Curso;
+import util.Validador;
 import java.util.ArrayList;
 import java.util.Scanner;
-import model.Profesor;
 
 public class GestionProfesores {
     private ArrayList<Profesor> profesores;
-    int opcion;
-    String id, nombre;
-    boolean encontrado;
+    private Scanner scanner;
+    private Validador validador;
 
-    public GestionProfesores() {
+    public GestionProfesores(Scanner scanner, Validador validador) {
         this.profesores = new ArrayList<>();
+        this.scanner = scanner;
+        this.validador = validador;
     }
 
-    Scanner scanner = new Scanner(System.in);
-
-    /*
-     * Metodo que resgistra a los Profesores guardandolo en el array local
-     * "profesores
-     */
     public void agregarProfesor() {
-        scanner.nextLine();
-        System.out.println("====== Agregar Profesores ======");
-        System.out.print("Ingrese el ID: ");
-        id = scanner.nextLine();
-        System.out.print("Ingrese el nombre: ");
-        nombre = scanner.nextLine();
-        Profesor profesor = new Profesor(id, nombre);
-        profesores.add(profesor);
-    }
-
-    /*
-     * Metodo que lista todos los profesor de la lista profesor de la clase
-     * GestionProfesores
-     */
-    public void listarProfesores() {
-        int contador = 1;
-        System.out.println("====== Listar Profesores ======");
-        for (Profesor p : profesores) {
-            if (p.equals(p)) {
-                System.out.println("====== Profesor: " + (contador++) + " ======");
-                p.mostrarInformacion();
-            }
-        }
-    }
-
-    /*
-     * Método que busca a un profesor especifico mediante su ID
-     */
-    public void buscarProfesorPorId() {
-        scanner.nextLine();
-        System.out.println("====== Buscar Profesor ======\n");
-        System.out.print("Ingrese el ID del Profesor: ");
-        id = scanner.nextLine();
-        encontrado = false;
-        for (Profesor p : profesores) {
-            if (p.getId().equals(id)) {
-                p.mostrarInformacion();
-                encontrado = true;
-                break;
-            }
-        }
-        if (!encontrado) {
-            System.out.println("El Profesor no esta resgistrado.");
-        }
-    }
-
-    /*
-     * Metodo que edita datos de un profesor X que el usuario desee editar
-     */
-    public void editarProfesor() {
+        System.out.println("\n--- Agregar Profesor ---");
+        String id;
         do {
-            scanner.nextLine();
-            System.out.println("====== Editar Profesor ======\n");
-            System.out.println("Que desea etidar del profesor?");
-            System.out.println("1. Nombre");
-            System.out.println("2. ID");
-            System.out.println("0. Atras");
-            System.out.println("Selecciones una opcion: ");
-            opcion = scanner.nextInt();
-
-            switch (opcion) {
-                case 1:
-                    scanner.nextLine();
-                    System.out.print("Ingrese el ID del profesor a editar: ");
-                    id = scanner.nextLine();
-                    encontrado = false;
-                    for (Profesor p : profesores) {
-                        if (p.getId().equals(id)) {
-                            p.mostrarInformacion();
-                            encontrado = true;
-                            System.out.print("Ingrese el nuevo nombre: ");
-                            nombre = scanner.nextLine();
-                            p.setNombre(nombre);
-                            System.out.println("El nombre se a editado correctamente.");
-                            break;
-                        }
-                    }
-                    if (!encontrado) {
-                        System.out.println("El profesor no esta resgistrado.");
-                    }
-                    break;
-                case 2:
-                    scanner.nextLine();
-                    System.out.print("Ingrese el ID del profesor a editar: ");
-                    id = scanner.nextLine();
-                    encontrado = false;
-                    for (Profesor p : profesores) {
-                        if (p.getId().equals(id)) {
-                            p.mostrarInformacion();
-                            encontrado = true;
-                            System.out.print("Ingrese el nuevo ID: ");
-                            id = scanner.nextLine();
-                            p.setId(id);
-                            System.out.println("El ID se a editado correctamente.");
-                            break;
-                        }
-                    }
-                    if (!encontrado) {
-                        System.out.println("El profesor no esta resgistrado.");
-                    }
-                    break;
-                case 0:
-                    System.out.println("Volviendo a atras...");
-                    break;
-
-                default:
-                    break;
+            System.out.print("Ingrese ID del profesor: ");
+            id = scanner.nextLine();
+            if (!validador.entradaNoVacia(id)) {
+                System.out.println("⚠️ El ID no puede estar vacío.");
+            } else if (!validador.esIdUnico(id, profesores)) {
+                System.out.println("⚠️ El ID ya existe. Intente con otro.");
             }
-        } while (opcion != 0);
+        } while (!validador.entradaNoVacia(id) || !validador.esIdUnico(id, profesores));
+
+        String nombre;
+        do {
+            System.out.print("Ingrese nombre del profesor: ");
+            nombre = scanner.nextLine();
+            if (!validador.entradaNoVacia(nombre)) {
+                System.out.println("⚠️ El nombre no puede estar vacío.");
+            }
+        } while (!validador.entradaNoVacia(nombre));
+
+        Profesor nuevoProfesor = new Profesor(id, nombre);
+        System.out.print("¿Desea agregar materias al profesor? (s/n): ");
+        String opcionMaterias = scanner.nextLine();
+        if (opcionMaterias.equalsIgnoreCase("s")) {
+            String materia;
+            do {
+                System.out.print("Ingrese materia (deje vacío para terminar): ");
+                materia = scanner.nextLine();
+                if (!materia.isEmpty()) {
+                    nuevoProfesor.agregarMateria(materia);
+                }
+            } while (!materia.isEmpty());
+        }
+        profesores.add(nuevoProfesor);
+        System.out.println("✅ Profesor agregado exitosamente.");
     }
 
-    /*
-     * Este metodo elimina profesor del array desde consola, segun elija el
-     * usuario
-     */
-    public void eliminarProfesor() {
-        scanner.nextLine();
-        System.out.println("====== Eliminar Profesor ======\n");
-        System.out.print("Ingrese el ID del profesor a elimiar: ");
-        id = scanner.nextLine();
-        encontrado = false;
-        for (Profesor p : profesores) {
-            if (p.getId().equals(id)) {
-                p.mostrarInformacion();
-                encontrado = true;
-                System.out.println("Seguro que desea eliminar? [S/N]: ");
-                char deccicion = scanner.next().charAt(0);
-                if (deccicion != 'S' || deccicion != 's') {
-                    System.out.println("Volviendo atras...");
-                    break;
-                } else {
-                    profesores.remove(p);
-                    System.out.println("El profesor se a eliminado correctamente.");
-                    break;
+    public void listarProfesores() {
+        System.out.println("\n--- Lista de Profesores ---");
+        if (profesores.isEmpty()) {
+            System.out.println("No hay profesores registrados.");
+            return;
+        }
+        for (Profesor prof : profesores) {
+            System.out.println(prof);
+        }
+    }
+
+    public Profesor buscarProfesorPorId() {
+        System.out.print("Ingrese el ID del profesor a buscar: ");
+        String idBuscar = scanner.nextLine();
+        if (!validador.entradaNoVacia(idBuscar)) {
+            System.out.println("⚠️ El ID no puede estar vacío.");
+            return null;
+        }
+        for (Profesor prof : profesores) {
+            if (prof.getId().equals(idBuscar)) {
+                return prof;
+            }
+        }
+        System.out.println("⚠️ Profesor con ID '" + idBuscar + "' no encontrado.");
+        return null;
+    }
+
+    public void asociarProfesorACurso(ArrayList<Curso> cursos) {
+        System.out.println("\n--- Asociar Profesor a Curso ---");
+        Profesor profesor = buscarProfesorPorId();
+        if (profesor == null) {
+            return;
+        }
+
+        if (cursos.isEmpty()) {
+            System.out.println("No hay cursos disponibles para asociar.");
+            return;
+        }
+
+        System.out.println("Cursos disponibles:");
+        for (int i = 0; i < cursos.size(); i++) {
+            System.out.println((i + 1) + ". " + cursos.get(i).getNombre());
+        }
+
+        System.out.print("Ingrese el número del curso a asignar: ");
+        String opcionCursoStr = scanner.nextLine();
+        if (!validador.esNumeroValido(opcionCursoStr)) {
+            System.out.println("⚠️ Entrada inválida. Ingrese un número.");
+            return;
+        }
+        int opcionCurso = Integer.parseInt(opcionCursoStr);
+
+        if (opcionCurso > 0 && opcionCurso <= cursos.size()) {
+            Curso cursoSeleccionado = cursos.get(opcionCurso - 1);
+            if (cursoSeleccionado.getProfesorAsignado() != null) {
+                System.out.println("⚠️ El curso '" + cursoSeleccionado.getNombre() + "' ya tiene asignado al profesor: " + cursoSeleccionado.getProfesorAsignado().getNombre());
+                System.out.print("¿Desea reasignar? (s/n): ");
+                String reasignar = scanner.nextLine();
+                if (!reasignar.equalsIgnoreCase("s")) {
+                    System.out.println("Operación cancelada.");
+                    return;
                 }
             }
+            cursoSeleccionado.setProfesorAsignado(profesor);
+            System.out.println("✅ Profesor '" + profesor.getNombre() + "' asignado al curso '" + cursoSeleccionado.getNombre() + "' exitosamente.");
+        } else {
+            System.out.println("⚠️ Opción de curso inválida.");
         }
-        if (!encontrado) {
-            System.out.println("El profesor no esta resgistrado.");
-        }
-
     }
 
-    public void subMenu() {
-
-        do {
-            System.out.println("====== Gestion de Profesores ======");
-            System.out.println("1. Agregar Profesor");
-            System.out.println("2. Listar Profesor");
-            System.out.println("3. Buscar Profesor");
-            System.out.println("4. Editar Profesor");
-            System.out.println("5. Eliminar Profesor");
-            System.out.println("0. Volver al menú principal");
-
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-
-            switch (opcion) {
-                case 1:
-                    agregarProfesor();
-                    break;
-                case 2:
-                    listarProfesores();
-                    break;
-                case 3:
-                    buscarProfesorPorId();
-                    break;
-                case 4:
-                    editarProfesor();
-                    break;
-                case 5:
-                    eliminarProfesor();
-                    break;
-                case 0:
-                    System.out.println("Volviendo al menú principal...");
-                    break;
-                default:
-                    System.out.println("Opción no válida, intente nuevamente.");
-            }
-        } while (opcion != 0);
+    // Método para obtener la lista de profesores (útil para otras clases de gestión)
+    public ArrayList<Profesor> getProfesores() {
+        return profesores;
     }
 }
