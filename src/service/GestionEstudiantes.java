@@ -1,241 +1,221 @@
+// src/service/GestionEstudiantes.java
 package service;
 
-import java.util.ArrayList;
-import java.util.Scanner;
 import model.Estudiante;
+import model.Curso;
+import util.Validador;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 
 public class GestionEstudiantes {
-    // Atributos de la clase
     private ArrayList<Estudiante> estudiantes;
-    private String id, nombre;
-    private int edad, opcion;
-    private boolean encontrado;
+    private Scanner scanner;
+    private Validador validador;
 
-    public GestionEstudiantes() {
+    public GestionEstudiantes(Scanner scanner, Validador validador) {
         this.estudiantes = new ArrayList<>();
+        this.scanner = scanner;
+        this.validador = validador;
     }
 
-    // Instancias
-    Scanner scanner = new Scanner(System.in);
-    // Estudiante estudiante = new Estudiante(); => Prueba
-
-    /*
-     * Metodo que resgistra a los estudiantes guardandolo en el array local
-     * "estudiantes"
-     */
-    public void agregarEstudiante() {
-        scanner.nextLine();
-        System.out.println("====== Registrar Estudiante ======\n");
-        System.out.print("ID: ");
-        id = scanner.nextLine();
-        System.out.print("Nombre: ");
-        nombre = scanner.nextLine();
-        System.out.print("Edad: ");
-        edad = scanner.nextInt();
-        Estudiante estudiante = new Estudiante(id, nombre, edad);
-        estudiantes.add(estudiante);
-    }
-
-    /*
-     * Metodo que lista todos los estudiantes de la lista estudiante de la clase
-     * GestionEstudiantes
-     */
-    public void listarEstudiantes() {
-        int contador = 1;
-        for (Estudiante e : estudiantes) {
-            if (e.equals(e)) {
-                System.out.println("====== Estudiante: " + (contador++) + " ======");
-                e.mostrarInformacion();
-
+    public void agregarEstudiante(ArrayList<Curso> cursosDisponibles) {
+        System.out.println("\n--- Agregar Estudiante ---");
+        String id;
+        do {
+            System.out.print("Ingrese ID del estudiante: ");
+            id = scanner.nextLine();
+            if (!validador.entradaNoVacia(id)) {
+                System.out.println("⚠️ El ID no puede estar vacío.");
+            } else if (!validador.esIdUnico(id, estudiantes)) {
+                System.out.println("⚠️ El ID ya existe. Intente con otro.");
             }
+        } while (!validador.entradaNoVacia(id) || !validador.esIdUnico(id, estudiantes));
+
+        String nombre;
+        do {
+            System.out.print("Ingrese nombre del estudiante: ");
+            nombre = scanner.nextLine();
+            if (!validador.entradaNoVacia(nombre)) {
+                System.out.println("⚠️ El nombre no puede estar vacío.");
+            }
+        } while (!validador.entradaNoVacia(nombre));
+
+        int edad;
+        do {
+            System.out.print("Ingrese edad del estudiante: ");
+            String edadStr = scanner.nextLine();
+            if (validador.esNumeroValido(edadStr)) {
+                edad = Integer.parseInt(edadStr);
+                if (edad <= 0) {
+                    System.out.println("⚠️ La edad no puede ser negativa o cero.");
+                } else {
+                    break;
+                }
+            } else {
+                System.out.println("⚠️ Edad inválida. Ingrese un número.");
+            }
+        } while (true);
+
+        Curso cursoAsignado = null;
+        if (!cursosDisponibles.isEmpty()) {
+            System.out.println("Cursos disponibles:");
+            for (int i = 0; i < cursosDisponibles.size(); i++) {
+                System.out.println((i + 1) + ". " + cursosDisponibles.get(i).getNombre());
+            }
+            System.out.print("Ingrese el número del curso a asignar (0 si no desea asignar ahora): ");
+            String opcionCursoStr = scanner.nextLine();
+            if (validador.esNumeroValido(opcionCursoStr)) {
+                int opcionCurso = Integer.parseInt(opcionCursoStr);
+                if (opcionCurso > 0 && opcionCurso <= cursosDisponibles.size()) {
+                    cursoAsignado = cursosDisponibles.get(opcionCurso - 1);
+                    System.out.println("Estudiante asignado al curso: " + cursoAsignado.getNombre());
+                } else if (opcionCurso != 0) {
+                    System.out.println("Opción de curso inválida.");
+                }
+            } else {
+                System.out.println("Entrada inválida para el curso.");
+            }
+        } else {
+            System.out.println("No hay cursos disponibles para asignar. Cree cursos primero.");
+        }
+
+        Estudiante nuevoEstudiante = new Estudiante(id, nombre, edad, cursoAsignado);
+        estudiantes.add(nuevoEstudiante);
+        if (cursoAsignado != null) {
+            cursoAsignado.agregarEstudiante(nuevoEstudiante);
+        }
+        System.out.println("✅ Estudiante agregado exitosamente.");
+    }
+
+    public void listarEstudiantes() {
+        System.out.println("\n--- Lista de Estudiantes ---");
+        if (estudiantes.isEmpty()) {
+            System.out.println("No hay estudiantes registrados.");
+            return;
+        }
+        for (Estudiante est : estudiantes) {
+            System.out.println(est);
         }
     }
 
-    /*
-     * Método que busca a un estudiante especifico mediante su ID
-     */
-    public void buscarEstudiantePorId() {
-        scanner.nextLine();
-        System.out.println("====== Buscar Estudiante ======\n");
-        System.out.print("Ingrese el ID del estudiante: ");
-        id = scanner.nextLine();
-        encontrado = false;
-        for (Estudiante e : estudiantes) {
-            if (e.getId().equals(id)) {
-                e.mostrarInformacion();
+    public Estudiante buscarEstudiantePorId() {
+        System.out.print("Ingrese el ID del estudiante a buscar: ");
+        String idBuscar = scanner.nextLine();
+        if (!validador.entradaNoVacia(idBuscar)) {
+            System.out.println("⚠️ El ID no puede estar vacío.");
+            return null;
+        }
+        for (Estudiante est : estudiantes) {
+            if (est.getId().equals(idBuscar)) {
+                return est;
+            }
+        }
+        System.out.println("⚠️ Estudiante con ID '" + idBuscar + "' no encontrado.");
+        return null;
+    }
+
+    public void editarEstudiante(ArrayList<Curso> cursosDisponibles) {
+        System.out.println("\n--- Editar Estudiante ---");
+        Estudiante estudianteAEditar = buscarEstudiantePorId();
+        if (estudianteAEditar == null) {
+            return;
+        }
+
+        System.out.println("Estudiante actual: " + estudianteAEditar);
+
+        System.out.print("Ingrese nuevo nombre (" + estudianteAEditar.getNombre() + "): ");
+        String nuevoNombre = scanner.nextLine();
+        if (validador.entradaNoVacia(nuevoNombre)) {
+            estudianteAEditar.setNombre(nuevoNombre);
+        }
+
+        int nuevaEdad;
+        do {
+            System.out.print("Ingrese nueva edad (" + estudianteAEditar.getEdad() + "): ");
+            String nuevaEdadStr = scanner.nextLine();
+            if (nuevaEdadStr.isEmpty()) {
+                break; // No se cambia la edad
+            }
+            if (validador.esNumeroValido(nuevaEdadStr)) {
+                nuevaEdad = Integer.parseInt(nuevaEdadStr);
+                if (nuevaEdad <= 0) {
+                    System.out.println("⚠️ La edad no puede ser negativa o cero.");
+                } else {
+                    estudianteAEditar.setEdad(nuevaEdad);
+                    break;
+                }
+            } else {
+                System.out.println("⚠️ Edad inválida. Ingrese un número.");
+            }
+        } while (true);
+
+        Curso cursoActual = estudianteAEditar.getCurso();
+        String cursoActualNombre = (cursoActual != null) ? cursoActual.getNombre() : "Ninguno";
+        System.out.println("Curso actual: " + cursoActualNombre);
+
+        if (!cursosDisponibles.isEmpty()) {
+            System.out.println("Cursos disponibles:");
+            for (int i = 0; i < cursosDisponibles.size(); i++) {
+                System.out.println((i + 1) + ". " + cursosDisponibles.get(i).getNombre());
+            }
+            System.out.print("Ingrese el número del nuevo curso (0 para no cambiar): ");
+            String opcionCursoStr = scanner.nextLine();
+            if (validador.esNumeroValido(opcionCursoStr)) {
+                int opcionCurso = Integer.parseInt(opcionCursoStr);
+                if (opcionCurso > 0 && opcionCurso <= cursosDisponibles.size()) {
+                    Curso nuevoCurso = cursosDisponibles.get(opcionCurso - 1);
+                    if (cursoActual != null) {
+                        cursoActual.eliminarEstudiante(estudianteAEditar); // Remover del curso antiguo
+                    }
+                    estudianteAEditar.setCurso(nuevoCurso);
+                    nuevoCurso.agregarEstudiante(estudianteAEditar);
+                    System.out.println("Curso del estudiante actualizado a: " + nuevoCurso.getNombre());
+                } else if (opcionCurso == 0) {
+                    System.out.println("No se cambió el curso.");
+                } else {
+                    System.out.println("Opción de curso inválida.");
+                }
+            } else if (!opcionCursoStr.isEmpty()){
+                System.out.println("Entrada inválida para el curso.");
+            }
+        } else {
+            System.out.println("No hay cursos disponibles para asignar.");
+        }
+
+        System.out.println("✅ Estudiante editado exitosamente.");
+    }
+
+    public void eliminarEstudiante() {
+        System.out.println("\n--- Eliminar Estudiante ---");
+        System.out.print("Ingrese el ID del estudiante a eliminar: ");
+        String idEliminar = scanner.nextLine();
+        if (!validador.entradaNoVacia(idEliminar)) {
+            System.out.println("⚠️ El ID no puede estar vacío.");
+            return;
+        }
+
+        Iterator<Estudiante> iterator = estudiantes.iterator();
+        boolean encontrado = false;
+        while (iterator.hasNext()) {
+            Estudiante est = iterator.next();
+            if (est.getId().equals(idEliminar)) {
+                if (est.getCurso() != null) {
+                    est.getCurso().eliminarEstudiante(est); // Remover del curso asociado
+                }
+                iterator.remove();
                 encontrado = true;
+                System.out.println("✅ Estudiante eliminado exitosamente.");
                 break;
             }
         }
         if (!encontrado) {
-            System.out.println("El estudiante no esta resgistrado.");
+            System.out.println("⚠️ Estudiante con ID '" + idEliminar + "' no encontrado.");
         }
     }
 
-    /*
-     * Metodo que edita datos de un estudiante X que el usuario desee editar
-     */
-    public void editarEstudiante() {
-        do {
-            scanner.nextLine();
-            System.out.println("====== Editar Estudiante ======\n");
-            System.out.println("Que desea etidar del estudiante?");
-            System.out.println("1. Nombre");
-            System.out.println("2. ID");
-            System.out.println("3. Edad");
-            System.out.println("0. Atras");
-            System.out.println("Selecciones una opcion: ");
-            opcion = scanner.nextInt();
-
-            switch (opcion) {
-                case 1:
-                    scanner.nextLine();
-                    System.out.print("Ingrese el ID del estudiante a editar: ");
-                    id = scanner.nextLine();
-                    encontrado = false;
-                    for (Estudiante e : estudiantes) {
-                        if (e.getId().equals(id)) {
-                            e.mostrarInformacion();
-                            encontrado = true;
-                            System.out.print("Ingrese el nuevo nombre: ");
-                            nombre = scanner.nextLine();
-                            e.setNombre(nombre);
-                            System.out.println("El nombre se a editado correctamente.");
-                            break;
-                        }
-                    }
-                    if (!encontrado) {
-                        System.out.println("El estudiante no esta resgistrado.");
-                    }
-                    break;
-                case 2:
-                    scanner.nextLine();
-                    System.out.print("Ingrese el ID del estudiante a editar: ");
-                    id = scanner.nextLine();
-                    encontrado = false;
-                    for (Estudiante e : estudiantes) {
-                        if (e.getId().equals(id)) {
-                            e.mostrarInformacion();
-                            encontrado = true;
-                            System.out.print("Ingrese el nuevo ID: ");
-                            id = scanner.nextLine();
-                            e.setId(id);
-                            System.out.println("El ID se a editado correctamente.");
-                            break;
-                        }
-                    }
-                    if (!encontrado) {
-                        System.out.println("El estudiante no esta resgistrado.");
-                    }
-                    break;
-                case 3:
-                    scanner.nextLine();
-                    System.out.print("Ingrese el ID del estudiante a editar: ");
-                    id = scanner.nextLine();
-                    encontrado = false;
-                    for (Estudiante e : estudiantes) {
-                        if (e.getId().equals(id)) {
-                            e.mostrarInformacion();
-                            encontrado = true;
-                            System.out.print("Ingrese la nueva edad: ");
-                            edad = scanner.nextInt();
-                            e.setEdad(edad);
-                            System.out.println("La edad se a editado correctamente.");
-                            break;
-                        }
-                    }
-                    if (!encontrado) {
-                        System.out.println("El estudiante no esta resgistrado.");
-                    }
-                    break;
-                case 0:
-                    System.out.println("Volviendo a atras...");
-                    break;
-
-                default:
-                    break;
-            }
-        } while (opcion != 0);
-    }
-
-    /*
-     * Este metodo elimina estudiante del array desde consola, segun elija el
-     * usuario
-     */
-    public void eliminarEstudiante() {
-        scanner.nextLine();
-        System.out.println("====== Eliminar Estudiante ======\n");
-        System.out.print("Ingrese el ID del estudiante a elimiar: ");
-        id = scanner.nextLine();
-        encontrado = false;
-        for (Estudiante e : estudiantes) {
-            if (e.getId().equals(id)) {
-                e.mostrarInformacion();
-                encontrado = true;
-                System.out.println("Seguro que desea eliminar? [S/N]: ");
-                char deccicion = scanner.next().charAt(0);
-                if (deccicion != 'S' || deccicion != 's') {
-                    System.out.println("Volviendo atras...");
-                    break;
-                } else {
-                    estudiantes.remove(e);
-                    System.out.println("El estudiante se a eliminado correctamente.");
-                    break;
-                }
-            }
-        }
-        if (!encontrado) {
-            System.out.println("El estudiante no esta resgistrado.");
-        }
-
-    }
-
-    // Funcion que busca estudiante al ser llamada
-    public Estudiante buscarEstudiantePorId(String id) {
-        for (Estudiante e : estudiantes) {
-            if (e.getId().equals(id)) {
-                return e;
-            }
-        }
-        return null;
-    }
-
-    // Metodo principal de la clase GestionEstudiantes como subMenu
-    public void subMenu() {
-        do {
-            System.out.println("====== Gestion de Estudiates ======");
-            System.out.println("1. Agregar Estudiates");
-            System.out.println("2. Listar Estudiates");
-            System.out.println("3. Buscar Estudiates");
-            System.out.println("4. Editar Estudiates");
-            System.out.println("5. Eliminar Estudiates");
-            System.out.println("0. Volver al menu principal");
-
-            System.out.print("Seleccione una opcion: ");
-            opcion = scanner.nextInt();
-
-            switch (opcion) {
-                case 1:
-                    agregarEstudiante();
-                    break;
-                case 2:
-                    listarEstudiantes();
-                    break;
-                case 3:
-                    buscarEstudiantePorId();
-                    break;
-                case 4:
-                    editarEstudiante();
-                    break;
-                case 5:
-                    eliminarEstudiante();
-                    break;
-                case 0:
-                    System.out.println("Volviendo al menu principal...");
-                    break;
-                default:
-                    System.out.println("Opcion no valida, intente nuevamente.");
-            }
-        } while (opcion != 0);
+    // Método para obtener la lista de estudiantes (útil para otras clases de gestión)
+    public ArrayList<Estudiante> getEstudiantes() {
+        return estudiantes;
     }
 }
