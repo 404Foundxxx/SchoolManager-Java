@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Curso implements Serializable {
     private String nombre;
     private Profesor profesorAsignado; // Asociación con la clase Profesor
-    private ArrayList<Estudiante> estudiantes; // Lista de estudiantes en el curso
+    private final ArrayList<Estudiante> estudiantes; // Lista de estudiantes en el curso
 
     public Curso(String nombre) {
         this.nombre = nombre;

@@ -1,3 +1,5 @@
+package app;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,9 +14,9 @@ import util.Validador;
 import util.Persistencia;
 
 public class Main {
-    private static Scanner scanner = new Scanner(System.in);
-    private static Validador validador = new Validador();
-    private static Persistencia persistencia = new Persistencia();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final Validador validador = new Validador();
+    private static final Persistencia persistencia = new Persistencia();
 
     // Las GestonXXX se inicializarán después de cargar los datos
     private static GestionEstudiantes gestionEstudiantes;
