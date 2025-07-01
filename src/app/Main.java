@@ -81,7 +81,6 @@ public class Main {
 
         scanner.close();
     }
-
     private static void mostrarMenuPrincipal() {
         System.out.println("\n====== SISTEMA DE GESTIÓN ESCOLAR ======");
         System.out.println("1. Gestión de Estudiantes");
