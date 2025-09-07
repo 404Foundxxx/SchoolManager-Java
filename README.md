@@ -95,7 +95,7 @@ SistemaGestionEscolar/
 
 ## 👨‍💻 Autor
 
-- Gabriel Marte
+- [@404Foundxxx](https://github.com/404Foundxxx) 
 - Aprendiendo Java y desarrollo full-stack paso a paso 🚀
 
 ---
